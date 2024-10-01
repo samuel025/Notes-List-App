@@ -44,7 +44,7 @@ class _HomepageState extends State<Homepage> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: navigateToAddPage,
-        label: Text('Add Todo'),
+        label: Text('Add'),
       ),
     );
   }
