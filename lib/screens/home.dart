@@ -1,4 +1,7 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:convert';
+import 'dart:js_interop_unsafe';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_crud_api/screens/add_list.dart';
@@ -26,25 +29,47 @@ class _HomepageState extends State<Homepage> {
       ),
       body: Visibility(
         visible: isLoading,
-        child: Center(child: CircularProgressIndicator(),),
         replacement: RefreshIndicator(
           onRefresh: fetchTodo,
           child: ListView.builder(
             itemCount: items.length,
             itemBuilder: (context, index) {
               final item = items[index] as Map;
+              final id = item['_id'] as String;
               return ListTile(
                 leading: CircleAvatar(child: Text('${index + 1}'),),
                 title: Text(item['title']),
                 subtitle: Text(item['description']),
+                trailing: PopupMenuButton(
+                  onSelected: (value) {
+                    if(value == 'edit'){
+
+                    }else if(value == 'delete'){
+                       
+                    }
+                  },
+                  itemBuilder: (context) {
+                    return [
+                      PopupMenuItem(
+                        value: 'edit',
+                        child: Text('Edit'),
+                      ),
+                      PopupMenuItem(
+                        value: 'delete',
+                        child: Text('Delete')
+                      ),
+                    ];
+                  },
+                ),
               );
             }
           ),
         ),
+        child: const  Center(child: CircularProgressIndicator(),),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: navigateToAddPage,
-        label: Text('Add'),
+        label: const Text('Add'),
       ),
     );
   }
@@ -70,5 +95,16 @@ class _HomepageState extends State<Homepage> {
       isLoading = false;
     });
   }
+  Future<void> deleteby_id(String id) async{
+    final url = 'https://api.nstack.in/v1/todos/$id'; 
+    final uri = Uri.parse(url);
+    final response = await http.delete(uri);
+    if (response.statusCode == 200) {
+      final filtered = items.where((element) => element['_id'] != id).toList();
+      setState(() {
+        
+      });
+   }
+  
 
-} 
+}}
